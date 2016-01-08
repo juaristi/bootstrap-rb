@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+require_relative "handlers.rb"
 
 module Bootstrap
   class TargetDirectoryBusyError < Exception; end
@@ -91,67 +92,20 @@ S
       target
     end
   end
-
-  class Handlers
-    private
-    def initialize; end
-
-    public
-    def Handlers.get_handlers
-      user_handlers = nil
-      user_hooks = Files("bootstrap-hooks", "bootstrap-hooks.rb")
-      
-      begin
-        if user_hooks and require_relative(user_hooks)
-          user_handlers = UserHandlers.new
-        else
-          user_handlers = Handlers.new
-        end
-      rescue LoadError => e
-        user_handlers = Handlers.new
-        puts "-- [WARNING] Could not load user hooks at '#{user_hooks}'."
-      end
-
-      user_handlers
-    end
-
-    def post_checkout(info)
-      DefaultHandlers.post_checkout(info)
-    end
-  end
-
-  class DefaultHandlers
-    def DefaultHandlers.post_checkout(info)
-      puts "-- This is the default 'post_checkout'."
-    end
-  end
-
-  def Files(*files)
-    files.each { |f|
-      return f if File.exist?(f)
-    }
-    nil
-  end
-
-  def Dirs(*dirs)
-    dirs.each { |d|
-      return d if Dir.exist?(d)
-    }
-    nil
-  end
 end
 
 if $0 == __FILE__
-  h = Bootstrap::Hook.new
+  # h = Bootstrap::Hook.new
   begin
-    path = h.create_hook({
-      :engine => "git",
-      :hook => "post-checkout",
-      :dir => :default, # Might be an array of a list of directories to try
-      :create_new_directory => true,
-      :create_new_hook => false
-    })
-    puts "-- Created GIT post-checkout hook at '#{path}'"
+    # path = h.create_hook({
+      # :engine => "git",
+      # :hook => "post-checkout",
+      # :dir => :default, # Might be an array of a list of directories to try
+      # :create_new_directory => true,
+      # :create_new_hook => false
+    # })
+    # puts "-- Created GIT post-checkout hook at '#{path}'"
+    config = Bootstrap::Config.get_config
   rescue Bootstrap::TargetDirectoryBusyError => e
     $stderr.puts "-- Temporary directory '#{e.message}' already exists. Aborting."
   end
