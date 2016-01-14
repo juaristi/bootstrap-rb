@@ -34,10 +34,10 @@ module Bootstrap
 
         user_config = Bootstrap::UserConfig
         puts "User configuration: " + user_config.to_s
-      rescue LoadError => le
+      rescue LoadError
         puts "-- [WARNING] Could not load user hooks at '#{@@user_settings}'."
         user_config = nil
-      rescue NameError => ne
+      rescue NameError
         user_config = nil
       end
 
@@ -51,7 +51,7 @@ module Bootstrap
       begin
         init
         user_handlers = UserHandlers.new
-      rescue LoadError => e
+      rescue LoadError
         user_handlers = Handlers.new
         puts "-- [WARNING] Could not load user hooks at '#{user_hooks}'."
       end
