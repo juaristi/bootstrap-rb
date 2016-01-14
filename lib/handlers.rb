@@ -18,9 +18,9 @@ module Bootstrap
   class UserSettings
     protected
     def UserSettings.init
-      user_settings = Utils.Files("bootstrap-hooks", "bootstrap-hooks.rb")
-      raise LoadError, "not found" unless user_settings
-      raise LoadError unless require_relative(user_settings)
+      @@user_settings = Utils.Files("bootstrap", "bootstrap.rb", "bootstrap-rb")
+      raise LoadError, "not found" unless @@user_settings
+      raise LoadError unless require_relative(@@user_settings)
     end
     def initialize; end
   end
